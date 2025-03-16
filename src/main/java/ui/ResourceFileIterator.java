@@ -1,23 +1,32 @@
 package ui;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
+import com.seedfinding.mccore.util.data.Pair;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.*;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 public class ResourceFileIterator {
-    public static void forEachResource(List<String> resources, Consumer<Path> action) {
-        try {
-            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            Path dir = Paths.get(Objects.requireNonNull(classLoader.getResource("items")).toURI());
+    public static void forEachImage(List<String> resources, Consumer<Pair<String, BufferedImage>> action) {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
-            try (Stream<Path> files = Files.walk(dir)) {
-                files.filter(Files::isRegularFile).forEach(action);
+        for (String resource : resources) {
+            try (InputStream inputStream = classLoader.getResourceAsStream(resource)) {
+                if (inputStream == null) {
+                    System.out.println("File not found!");
+                    return;
+                }
+
+                action.accept(new Pair<>(resource, ImageIO.read(inputStream)));
+            }
+            catch (Exception e) {
+                e.printStackTrace();
             }
         }
-        catch (URISyntaxException | IOException | NullPointerException ignored) {}
     }
 }

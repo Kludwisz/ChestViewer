@@ -108,12 +108,11 @@ public class DoubleChestViewer extends JPanel {
                 "items/string.png"
         );
 
-        ResourceFileIterator.forEachResource(items,
-                path -> {
-                    String itemName = path.getFileName().toString().replace(".png", "");
+        ResourceFileIterator.forEachImage(items,
+                pair -> {
+                    String itemName = pair.getFirst().replace(".png", "").replace("items/", "");
                     try {
-                        Image img = new ImageIcon(path.toUri().toURL()).getImage();
-                        ITEM_IMAGES.put(itemName, img);
+                        ITEM_IMAGES.put(itemName, pair.getSecond());
                     }
                     catch (Exception e) {
                         e.printStackTrace();
