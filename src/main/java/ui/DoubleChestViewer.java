@@ -6,6 +6,7 @@ import loot.BastionLootGenerator;
 import javax.swing.*;
 import java.awt.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -79,7 +80,35 @@ public class DoubleChestViewer extends JPanel {
     }
 
     static {
-        ResourceFileIterator.forEachResource("items",
+        List<String> items = Arrays.asList(
+                "items/ancient_debris.png",
+                "items/arrow.png",
+                "items/bone_block.png",
+                "items/chain.png",
+                "items/crossbow.png",
+                "items/crying_obsidian.png",
+                "items/enchanted_book.png",
+                "items/gilded_blackstone.png",
+                "items/gold_block.png",
+                "items/gold_ingot.png",
+                "items/gold_nugget.png",
+                "items/golden_boots.png",
+                "items/golden_chestplate.png",
+                "items/golden_helmet.png",
+                "items/golden_leggings.png",
+                "items/golden_sword.png",
+                "items/iron_ingot.png",
+                "items/iron_nugget.png",
+                "items/magma_cream.png",
+                "items/music_disc_pigstep.png",
+                "items/netherite_scrap.png",
+                "items/obsidian.png",
+                "items/snout_banner_pattern.png",
+                "items/spectral_arrow.png",
+                "items/string.png"
+        );
+
+        ResourceFileIterator.forEachResource(items,
                 path -> {
                     String itemName = path.getFileName().toString().replace(".png", "");
                     try {
