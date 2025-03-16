@@ -24,11 +24,13 @@ public class BastionLootGenerator {
         LootContext ctx = new LootContext(0L);
 
         rand.setSeed(iseed, false);
-        for (int i = 0; i < 2; i++) {
-            ctx.setSeed(rand.nextLong());
-            var res = bastionLootTable.generateIndexed(ctx);
-            loot.addAll(res);
-        }
+        long lowerChestSeed = rand.nextLong();
+        long upperChestSeed = rand.nextLong();
+
+        ctx.setSeed(upperChestSeed);
+        loot.addAll(bastionLootTable.generateIndexed(ctx));
+        ctx.setSeed(lowerChestSeed);
+        loot.addAll(bastionLootTable.generateIndexed(ctx));
 
         return loot;
     }

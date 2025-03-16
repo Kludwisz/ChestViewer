@@ -23,6 +23,11 @@ public class DoubleChestViewer extends JPanel {
         repaint();
     }
 
+    public void clear() {
+        currentLoot = null;
+        repaint();
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         g.setColor(Color.LIGHT_GRAY);
@@ -36,8 +41,8 @@ public class DoubleChestViewer extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         Iterator<ItemStack> iterator = currentLoot == null ? null : currentLoot.iterator();
 
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 6; j++) {
+        for (int j = 0; j < 6; j++) {
+            for (int i = 0; i < 9; i++) {
                 int x = startX + padding + i * (squareSize + padding);
                 int y = padding + j * (squareSize + padding);
                 g2.setColor(new Color(138, 138, 138));
@@ -74,7 +79,6 @@ public class DoubleChestViewer extends JPanel {
     }
 
     static {
-        // TODO load all item images (iterate over src/main/resources/items)
         ResourceFileIterator.forEachResource("items",
                 path -> {
                     String itemName = path.getFileName().toString().replace(".png", "");

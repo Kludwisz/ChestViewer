@@ -13,7 +13,6 @@ public class AppGUI {
     public static final DoubleChestViewer viewer = new DoubleChestViewer();
     public static final JTextField seedField = new JTextField(20);
 
-    // simple gui using swing
     public static void main(String[] args) {
         try {
             MC_FONT = Font.createFont(
@@ -56,7 +55,9 @@ public class AppGUI {
                     long seed = Long.parseLong(seedField.getText());
                     viewer.updateLoot(seed);
                 }
-                catch (NumberFormatException ignored) {}
+                catch (NumberFormatException ex) {
+                    viewer.clear();
+                }
             }
         });
 
