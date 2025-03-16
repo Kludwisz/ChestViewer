@@ -28,7 +28,7 @@ public class AppGUI {
 
         JFrame frame = new javax.swing.JFrame("Chest Viewer");
         frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-        frame.setSize(470, 610);
+        frame.setSize(470, 380);
 
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setBackground(new Color(31, 31, 44));

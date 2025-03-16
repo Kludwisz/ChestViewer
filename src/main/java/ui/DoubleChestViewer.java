@@ -40,15 +40,17 @@ public class DoubleChestViewer extends JPanel {
             for (int j = 0; j < 6; j++) {
                 int x = startX + padding + i * (squareSize + padding);
                 int y = padding + j * (squareSize + padding);
-                g.setColor(Color.WHITE);
-                g.fillRect(x, y, squareSize, squareSize);
+                g2.setColor(new Color(138, 138, 138));
+                g2.fillRect(x, y, squareSize, squareSize);
 
                 if (iterator != null && iterator.hasNext()) {
                     ItemStack is = iterator.next();
                     if (is.getItem() == null)
                         continue;
                     drawItem(g2, x, y, squareSize, is.getItem().getName());
-                    drawItemCount(g2, x + squareSize - 20, y + squareSize - 5, is.getCount());
+
+                    // FIXME looks terrible
+                    //drawItemCount(g2, x + squareSize - 20, y + squareSize - 5, is.getCount());
                 }
             }
         }
@@ -61,6 +63,7 @@ public class DoubleChestViewer extends JPanel {
         }
     }
 
+    @SuppressWarnings("unused")
     private void drawItemCount(Graphics2D g2, int x, int y, int itemCount) {
         String text = String.valueOf(itemCount);
         int offset = text.length() - 1;
@@ -71,6 +74,18 @@ public class DoubleChestViewer extends JPanel {
     }
 
     static {
-        // TODO load all item images
+        // TODO load all item images (iterate over src/main/resources/items)
+        ResourceFileIterator.forEachResource("items",
+                path -> {
+                    String itemName = path.getFileName().toString().replace(".png", "");
+                    try {
+                        Image img = new ImageIcon(path.toUri().toURL()).getImage();
+                        ITEM_IMAGES.put(itemName, img);
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+        );
     }
 }
