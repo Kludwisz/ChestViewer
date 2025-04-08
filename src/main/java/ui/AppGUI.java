@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -11,6 +12,7 @@ public class AppGUI {
     public static Font MC_FONT;
     public static final Color BG_COLOR = new Color(31, 31, 44);
 
+    private static File seedFile = null;
     private static final ArrayList<Long> seeds = new ArrayList<>();
     private static int currentSeedIndex = 0;
 
@@ -21,6 +23,7 @@ public class AppGUI {
     public static final JTextField seedField = new JTextField(20);
     public static final JLabel seedIDLabel = new JLabel("0/0");
     public static final JButton loadFileButton = new JButton("Load...");
+    public static final JButton refreshFileButton = new JButton("Refresh");
     public static final JButton nextSeedButton = new JButton(">>");
     public static final JButton prevSeedButton = new JButton("<<");
 
@@ -49,33 +52,23 @@ public class AppGUI {
         loadFileButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            fileChooser.setMultiSelectionEnabled(true);
+            fileChooser.setMultiSelectionEnabled(false);
             fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Text files", "txt"));
             int result = fileChooser.showOpenDialog(frame);
             if (result == JFileChooser.APPROVE_OPTION) {
-                seeds.clear();
-                currentSeedIndex = 0;
-                seedIDLabel.setText("0/0");
-                seedField.setText("");
-                for (java.io.File file : fileChooser.getSelectedFiles()) {
-                    try {
-                        java.util.Scanner scanner = new java.util.Scanner(file);
-                        while (scanner.hasNextLong()) {
-                            seeds.add(scanner.nextLong());
-                        }
-                    }
-                    catch (java.io.FileNotFoundException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-                if (!seeds.isEmpty()) {
-                    seedField.setText(Long.toString(seeds.get(0)));
-                    viewer.updateLoot(seeds.get(0));
-                    seedIDLabel.setText("1/" + seeds.size());
-                }
+                seedFile = fileChooser.getSelectedFile();
+                updateSeedList();
             }
         });
         hboxPanel.add(loadFileButton);
+
+        refreshFileButton.addActionListener(e -> {
+            if (seedFile != null) {
+                updateSeedList();
+            }
+        });
+        hboxPanel.add(refreshFileButton);
+
         hboxPanel.add(Box.createRigidArea(new Dimension(20, 0)));
 
         prevSeedButton.addActionListener(e -> {
@@ -144,5 +137,28 @@ public class AppGUI {
 
         frame.add(mainPanel);
         frame.setVisible(true);
+    }
+
+    private static void updateSeedList() {
+        seeds.clear();
+        currentSeedIndex = 0;
+        seedIDLabel.setText("0/0");
+        seedField.setText("");
+
+        try {
+            java.util.Scanner scanner = new java.util.Scanner(seedFile);
+            while (scanner.hasNextLong()) {
+                seeds.add(scanner.nextLong());
+            }
+        }
+        catch (java.io.FileNotFoundException ex) {
+            ex.printStackTrace();
+        }
+
+        if (!seeds.isEmpty()) {
+            seedField.setText(Long.toString(seeds.get(0)));
+            viewer.updateLoot(seeds.get(0));
+            seedIDLabel.setText("1/" + seeds.size());
+        }
     }
 }
